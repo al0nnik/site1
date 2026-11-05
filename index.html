@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f2b">
+  <meta name="description" content="У Мадины — товары для чистоты, уюта и приятных ароматов.">
+  <title>У Мадины — товары для уюта</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="У Мадины — главная">
+      <span class="brand-mark">✦</span>
+      <span>
+        <strong>У Мадины</strong>
+        <small>уют с заботой</small>
+      </span>
+    </a>
+
+    <nav class="top-nav" aria-label="Главная навигация">
+      <a href="#catalog">Каталог</a>
+      <a href="#about">О магазине</a>
+      <a href="https://wa.me/79044159021" target="_blank" rel="noopener noreferrer">Связаться с нами</a>
+    </nav>
+
+    <span class="cart-spacer" aria-hidden="true"></span>
+
+    <button class="cart-trigger" id="cartOpen" type="button" aria-label="Открыть корзину">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="19" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="cart-text">Корзина</span>
+      <b id="cartCount">0</b>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> ДОМАШНИЙ УЮТ С ЗАБОТОЙ</p>
+        <h1>Чистота и уют —<br><em>у Мадины.</em></h1>
+        <p class="hero-description">
+          Всё нужное для дома в одном месте — проверенные средства и приятные ароматы, подобранные с душой.
+        </p>
+        <a class="primary-button" href="#catalog">Открыть каталог <span>↗</span></a>
+
+        <div class="hero-notes">
+          <div>
+            <span class="note-icon">✦</span>
+            <p><strong>Всё для дома</strong><small>В одном месте</small></p>
+          </div>
+          <div>
+            <span class="note-icon">♡</span>
+            <p><strong>Удобный заказ</strong><small>Через WhatsApp</small></p>
+          </div>
+          <div>
+            <span class="note-icon">✓</span>
+            <p><strong>Выбор оплаты</strong><small>Наличные или СБП</small></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-label="Иллюстрация уютного дома">
+        <div class="sun-disc"></div>
+        <div class="art-leaf leaf-a"></div>
+        <div class="art-leaf leaf-b"></div>
+        <div class="art-card card-back"></div>
+        <div class="art-card card-front">
+          <div class="bottle-cap"></div>
+          <div class="bottle-label">
+            <span>У</span>
+            <strong>МАДИНЫ</strong>
+            <small>уют и чистота</small>
+          </div>
+        </div>
+        <div class="art-vase"><i></i><i></i><i></i></div>
+        <div class="art-sticker">с любовью<br>от Мадины <span>✧</span></div>
+      </div>
+    </section>
+
+    <section class="catalog-section" id="catalog">
+      <div class="section-heading reveal">
+        <div>
+          <p class="eyebrow">ВЫБОР МАДИНЫ</p>
+          <h2>Выбирайте <em>с душой</em></h2>
+        </div>
+        <p class="section-side-note">Всё нужное для дома<br>и приятные ароматы</p>
+      </div>
+
+      <div class="catalog-tools reveal">
+        <label class="search-wrap">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Найти товар..." aria-label="Поиск товаров">
+        </label>
+
+        <div class="sort-control">
+          <span class="sort-label">Сортировка</span>
+          <button class="sort-button" id="sortButton" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span id="sortCurrent">Популярные</span>
+            <span class="sort-chevron">⌄</span>
+          </button>
+          <div class="sort-menu" id="sortMenu" role="listbox" aria-label="Сортировка товаров" hidden>
+            <button type="button" role="option" data-sort="popular" aria-selected="true">✦ <span>Популярные</span></button>
+            <button type="button" role="option" data-sort="cheap" aria-selected="false"><span>Сначала дешевле</span></button>
+            <button type="button" role="option" data-sort="expensive" aria-selected="false"><span>Сначала дороже</span></button>
+            <button type="button" role="option" data-sort="name" aria-selected="false"><span>По названию</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="category-row reveal" id="categoryRow">
+        <button class="category-chip active" type="button" data-category="Все товары">Все товары <span>22</span></button>
+        <button class="category-chip" type="button" data-category="Стирка">Стирка</button>
+        <button class="category-chip" type="button" data-category="Уборка">Уборка</button>
+        <button class="category-chip" type="button" data-category="Для посуды">Для посуды</button>
+        <button class="category-chip" type="button" data-category="Ванная">Ванная</button>
+        <button class="category-chip" type="button" data-category="Для ухода">Для ухода</button>
+        <button class="category-chip" type="button" data-category="Диффузоры">Диффузоры</button>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+      <p class="empty-state" id="emptyState" hidden>Ничего не найдено. Попробуйте изменить запрос.</p>
+    </section>
+
+    <section class="about-strip reveal" id="about">
+      <span class="about-flower">✿</span>
+      <div>
+        <p class="eyebrow">ДОБРО ПОЖАЛОВАТЬ</p>
+        <h2>Уют начинается <em>здесь.</em></h2>
+      </div>
+      <p>В магазине «У Мадины» собраны средства, ароматы и маленькие радости, которые делают каждый день чуточку теплее.</p>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#">
+      <span class="brand-mark">✦</span>
+      <span><strong>У Мадины</strong><small>уют с заботой</small></span>
+    </a>
+    <span>У Мадины · Цены и наличие уточняются при заказе</span>
+  </footer>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Корзина" aria-hidden="true">
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow">ВАШ ВЫБОР</p>
+        <h2>Корзина <span id="drawerCount">(0)</span></h2>
+      </div>
+      <button class="icon-button" id="cartClose" type="button" aria-label="Закрыть корзину">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-bottom">
+      <div class="total-line"><span>Итого</span><strong id="cartTotal">0 ₽</strong></div>
+      <button class="primary-button full" id="checkoutOpen" type="button">Оформить заказ <span>↗</span></button>
+      <button class="clear-cart-button" id="clearCart" type="button">Очистить корзину</button>
+      <small>Данные заказа будут подготовлены для отправки через WhatsApp.</small>
+    </div>
+  </aside>
+
+  <div class="modal-wrap" id="productModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" hidden>
+    <div class="modal product-modal">
+      <button class="icon-button modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+      <div class="detail-layout">
+        <div class="detail-art" id="detailArt">
+          <span class="detail-spark">✧</span>
+          <img id="detailImage" class="detail-image" src="images/products/no-image.jpg" alt="Изображение товара">
+        </div>
+        <div class="detail-copy">
+          <p class="eyebrow" id="detailCategory">КАТАЛОГ</p>
+          <h2 id="detailTitle">Название товара</h2>
+          <p class="detail-price" id="detailPrice"></p>
+          <p class="detail-description" id="detailDescription"></p>
+
+          <div id="scentSection" class="scent-section" hidden>
+            <span class="field-label">Выберите аромат</span>
+            <div class="scent-options" id="scentOptions"></div>
+            <p class="scent-note" id="scentNote"></p>
+          </div>
+
+          <div class="detail-bottom">
+            <div class="quantity-control">
+              <button id="detailMinus" type="button" aria-label="Уменьшить количество">−</button>
+              <span id="detailQty">1</span>
+              <button id="detailPlus" type="button" aria-label="Увеличить количество">+</button>
+            </div>
+            <button class="primary-button" id="detailAdd" type="button">В корзину <span>↗</span></button>
+          </div>
+          <p class="detail-footnote">Выберите вариант и количество, затем добавьте товар в корзину.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-wrap" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" hidden>
+    <form class="modal checkout-modal" id="checkoutForm">
+      <button type="button" class="icon-button modal-close" data-close-modal aria-label="Закрыть">×</button>
+      <p class="eyebrow">ПОСЛЕДНИЙ ШАГ</p>
+      <h2 id="checkoutTitle">Оформление <em>заказа</em></h2>
+
+      <label>Имя получателя
+        <input id="customerName" name="customerName" required minlength="2" autocomplete="name" placeholder="Как к вам обращаться">
+      </label>
+
+      <label>Номер телефона
+        <input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="+7 900 000-00-00">
+      </label>
+
+      <label>Адрес доставки
+        <textarea id="address" name="address" required minlength="8" autocomplete="street-address" placeholder="Город, улица, дом, квартира"></textarea>
+      </label>
+
+      <div class="pay-group">
+        <span class="field-label">Способ оплаты</span>
+        <div class="pay-options" id="payOptions" role="radiogroup" aria-label="Способ оплаты">
+          <button type="button" class="pay-option active" role="radio" aria-checked="true" data-pay="Наличными при получении">
+            <span class="pay-icon">₽</span>
+            <span>Наличными</span>
+          </button>
+          <button type="button" class="pay-option" role="radio" aria-checked="false" data-pay="Перевод по СБП">
+            <span class="pay-icon">⇄</span>
+            <span>СБП</span>
+          </button>
+        </div>
+      </div>
+
+      <label class="consent">
+        <input id="consent" type="checkbox" required>
+        <span>Согласен(на) передать данные для оформления и доставки заказа.</span>
+      </label>
+
+      <div class="checkout-total"><span>К оплате</span><strong id="checkoutTotal">0 ₽</strong></div>
+      <button class="primary-button full" type="submit">Подготовить заказ в WhatsApp <span>↗</span></button>
+      <p class="form-note">Сайт подготовит сообщение. Для отправки нужно будет подтвердить его в WhatsApp.</p>
+      <p class="form-error" id="formError" role="alert"></p>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
