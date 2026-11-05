@@ -214,8 +214,9 @@
         <input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="+7 900 000-00-00">
       </label>
 
-      <label>Адрес доставки
-        <textarea id="address" name="address" required minlength="8" autocomplete="street-address" placeholder="Город, улица, дом, квартира"></textarea>
+      <label class="address-field">Адрес доставки
+  <input id="address" name="address" type="text" required minlength="8" autocomplete="off" placeholder="Начните вводить: город, улица, дом, квартира">
+  <div class="address-suggest" id="addressSuggest" role="listbox" aria-label="Подсказки адреса" hidden></div>
       </label>
 
       <div class="pay-group">

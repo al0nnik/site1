@@ -1,18 +1,25 @@
 const CONFIG = {
   storeName: "У Мадины",
-  whatsappNumber: "79044159021"
+  whatsappNumber: "79044159021",
+
+  /*
+    ПОДСКАЗКИ АДРЕСА
+
+    По умолчанию работают бесплатно через OpenStreetMap (Nominatim), ключ не нужен.
+
+    Для точных российских адресов (до дома и квартиры) используйте DaData
+    через свой серверный прокси: разверните api/suggest.js, задайте там
+    переменную окружения DADATA_TOKEN и укажите путь в dadataProxy (например "/api/suggest").
+    Токен во фронтенде НЕ указывайте — он утечёт.
+  */
+  dadataProxy: "",
+  dadataToken: "",
+  addressCountry: "RU"
 };
 
 /*
   ФОТОГРАФИИ ТОВАРОВ
-
-  Папка images/products/ содержит основные фотографии.
-  Папка images/scents/ содержит фотографии отдельных ароматов.
-
-  Формат изображений: JPG, PNG или WebP.
-  Имя файла в коде должно совпадать с реальным именем.
 */
-
 const productImages = {
   1: "images/products/1.png",
   2: "images/products/7.png",
@@ -40,11 +47,7 @@ const productImages = {
 
 /*
   ОТДЕЛЬНЫЕ ФОТОГРАФИИ АРОМАТОВ
-
-  Здесь можно назначить индивидуальное фото каждому варианту.
-  Если фотографии нет, используется основное фото товара.
 */
-
 const scentImages = {
   1: {
     "Rose-Pink": "images/scents/1.png",
@@ -55,7 +58,6 @@ const scentImages = {
     "Sensitive": "images/scents/6.png",
     "Botanics": "images/scents/30.png",
   },
-
   2: {
     "Apple": "images/scents/7.png",
     "Lemon": "images/scents/8.png",
@@ -282,6 +284,18 @@ const products = [
     blurb: "Глубокое очищение сложных загрязнений без царапин.",
     description: "Концентрированный чистящий крем с аммиаком быстро удаляет застывший жир, нагар и въевшиеся пятна. Обладает быстрым эффектом и бережно очищает твердые поверхности. \nОбъём: 500мл.",
     popular: 74
+  },
+  {
+    id: 23, name: "Скоро...", soon: true,
+    category: "Скоро", price: 0, tag: "Скоро",
+    blurb: "Новинка скоро появится в каталоге.",
+    description: "", popular: 0
+  },
+  {
+    id: 24, name: "Скоро...", soon: true,
+    category: "Скоро", price: 0, tag: "Скоро",
+    blurb: "Новинка скоро появится в каталоге.",
+    description: "", popular: 0
   }
 ];
 
@@ -361,7 +375,24 @@ function renderProducts() {
     list.sort((a, b) => b.popular - a.popular || a.id - b.id);
   }
 
-  grid.innerHTML = list.map(p => `
+  list = [...list.filter(p => !p.soon), ...list.filter(p => p.soon)];
+
+  grid.innerHTML = list.map(p => p.soon ? `
+    <article class="product-card soon-card" aria-label="Скоро в каталоге">
+      <div class="product-visual soon-visual">
+        <span class="product-tag">Скоро</span>
+        <span class="soon-mark">✦</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category">Скоро</div>
+        <h3>Скоро...</h3>
+        <p class="product-blurb">${esc(p.blurb)}</p>
+        <div class="product-bottom">
+          <strong class="product-price soon-price">Скоро...</strong>
+        </div>
+      </div>
+    </article>
+  ` : `
     <article class="product-card"
       tabindex="0"
       role="button"
@@ -745,7 +776,6 @@ $("detailAdd").addEventListener("click", () => {
 
   addToCart(product, state.detailScent, state.detailQty);
   closeModal("productModal");
-  openCart();
 });
 
 /* Корзина */
@@ -801,7 +831,7 @@ $("payOptions").addEventListener("click", event => {
   });
 });
 
-/* Анимация при прокрутке (вниз и обратно вверх) */
+/* Анимация при прокрутке */
 
 const revealObserver = "IntersectionObserver" in window
   ? new IntersectionObserver(entries => {
@@ -826,7 +856,7 @@ function observeReveal(nodes) {
 
 observeReveal(document.querySelectorAll(".reveal"));
 
-/* Лёгкий параллакс иллюстрации на первом экране */
+/* Параллакс первого экрана */
 
 const heroArt = document.querySelector(".hero-art");
 let scrollTicking = false;
@@ -867,11 +897,17 @@ overlay.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") {
-    if (!$("productModal").hidden) closeModal("productModal");
-    if (!$("checkoutModal").hidden) closeModal("checkoutModal");
-    closeCart();
+  if (event.key !== "Escape") return;
+
+  // сначала закрываем подсказки адреса, если они открыты
+  if (typeof addressBox !== "undefined" && addressBox && !addressBox.hidden) {
+    hideAddressSuggest();
+    return;
   }
+
+  if (!$("productModal").hidden) closeModal("productModal");
+  if (!$("checkoutModal").hidden) closeModal("checkoutModal");
+  closeCart();
 });
 
 $("checkoutForm").addEventListener("submit", event => {
@@ -937,11 +973,7 @@ $("checkoutForm").addEventListener("submit", event => {
   const url =
     `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-  const whatsappWindow = window.open(
-    url,
-    "_blank",
-    "noopener,noreferrer"
-  );
+  const whatsappWindow = window.open(url, "_blank", "noopener,noreferrer");
 
   if (!whatsappWindow) {
     $("formError").textContent =
@@ -950,6 +982,223 @@ $("checkoutForm").addEventListener("submit", event => {
   }
 
   showToast("Заказ подготовлен для WhatsApp");
+});
+
+/* Подсказки адреса */
+
+const addressInput = $("address");
+const addressBox = $("addressSuggest");
+
+let addressTimer = null;
+let addressAbort = null;
+let addressItems = [];
+let addressActive = -1;
+
+function hideAddressSuggest() {
+  addressBox.hidden = true;
+  addressBox.innerHTML = "";
+  addressItems = [];
+  addressActive = -1;
+}
+
+function renderAddressSuggest() {
+  if (!addressItems.length) {
+    hideAddressSuggest();
+    return;
+  }
+
+  addressBox.innerHTML = addressItems.map((item, index) => `
+    <button type="button" role="option"
+      class="address-option${index === addressActive ? " active" : ""}"
+      data-address-index="${index}">
+      <span class="address-pin" aria-hidden="true">⌖</span>
+      <span class="address-text">${esc(item.value)}</span>
+      ${item.label ? `<span class="address-type">${esc(item.label)}</span>` : ""}
+    </button>
+  `).join("");
+
+  addressBox.hidden = false;
+}
+
+function chooseAddress(index) {
+  const value = addressItems[index]?.value;
+  if (!value) return;
+
+  addressInput.value = value;
+  hideAddressSuggest();
+  addressInput.focus();
+  addressInput.setSelectionRange(addressInput.value.length, addressInput.value.length);
+}
+
+/* порядок частей адреса: от мелкого к крупному */
+function buildNominatimValue(item) {
+  const a = item.address || {};
+  const parts = [];
+  const push = v => { if (v && !parts.includes(v)) parts.push(v); };
+
+  push(a.house_number);
+  push(a.road);
+  push(a.suburb || a.city_district || a.neighbourhood);
+  push(a.city || a.town || a.village || a.hamlet || a.municipality);
+  push(a.county || a.state_district);
+  push(a.state || a.region);
+
+  if (!parts.length) push(item.name);
+
+  return parts.join(", ");
+}
+
+async function fetchAddressSuggestionsDaData(query, signal) {
+  const url = CONFIG.dadataProxy || "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  };
+
+  if (!CONFIG.dadataProxy && CONFIG.dadataToken) {
+    headers["Authorization"] = "Token " + CONFIG.dadataToken;
+  }
+
+  const response = await fetch(url, {
+    method: "POST",
+    signal,
+    headers,
+    body: JSON.stringify({ query, count: 6 })
+  });
+
+  if (!response.ok) return [];
+
+  const data = await response.json();
+  return (data.suggestions || []).map(s => ({
+    value: s.value || s.unrestricted_value || "",
+    label: s.data?.house ? "дом" : (s.data?.street ? "улица" : "")
+  })).filter(x => x.value);
+}
+
+async function fetchAddressSuggestionsNominatim(query, signal) {
+  const cleaned = query
+    .replace(/(^|[\s,])(г|п|пгт|пос|с|ст|х|ул|пер|пр|обл|р-н)\.?(?=[\s,]|$)/gi, "$1")
+    .replace(/\s{2,}/g, " ")
+    .trim() || query;
+
+  const typeLabels = {
+    city: "город", town: "город", village: "село", hamlet: "деревня",
+    isolated_dwelling: "двор", locality: "местность", suburb: "район",
+    city_district: "район", neighbourhood: "микрорайон", quarter: "квартал",
+    road: "улица", residential: "улица", pedestrian: "улица", living_street: "улица",
+    house: "дом", building: "дом", state: "регион", region: "регион",
+    county: "район", state_district: "район", municipality: "округ"
+  };
+
+  const search = extra => {
+    const params = new URLSearchParams({
+      format: "jsonv2",
+      addressdetails: "1",
+      "accept-language": "ru",
+      q: cleaned,
+      ...extra
+    });
+
+    if (CONFIG.addressCountry) {
+      params.set("countrycodes", CONFIG.addressCountry.toLowerCase());
+    }
+
+    return fetch(
+      "https://nominatim.openstreetmap.org/search?" + params.toString(),
+      { signal, headers: { "Accept-Language": "ru" } }
+    )
+      .then(r => (r.ok ? r.json() : []))
+      .catch(error => {
+        if (error.name === "AbortError") throw error;
+        return [];
+      });
+  };
+
+  const [places, others] = await Promise.all([
+    search({ featureType: "settlement", limit: "6" }),
+    search({ limit: "10" })
+  ]);
+
+  const seen = new Set();
+
+  return [...(Array.isArray(places) ? places : []), ...(Array.isArray(others) ? others : [])]
+    .map(item => ({
+      value: buildNominatimValue(item),
+      label: typeLabels[item.addresstype] || typeLabels[item.type] || ""
+    }))
+    .filter(item => {
+      if (!item.value || seen.has(item.value)) return false;
+      seen.add(item.value);
+      return true;
+    })
+    .slice(0, 8);
+}
+
+async function fetchAddressSuggestions(query, signal) {
+  if (CONFIG.dadataProxy || CONFIG.dadataToken) {
+    return fetchAddressSuggestionsDaData(query, signal);
+  }
+  return fetchAddressSuggestionsNominatim(query, signal);
+}
+
+addressInput.addEventListener("input", () => {
+  clearTimeout(addressTimer);
+
+  const query = addressInput.value.trim().replace(/[,\s]+$/, "");
+
+  if (query.length < 3) {
+    if (addressAbort) addressAbort.abort();
+    hideAddressSuggest();
+    return;
+  }
+
+  addressTimer = setTimeout(async () => {
+    if (addressAbort) addressAbort.abort();
+    addressAbort = new AbortController();
+    const { signal } = addressAbort;
+
+    try {
+      const items = await fetchAddressSuggestions(query, signal);
+      if (signal.aborted) return;
+
+      addressItems = items;
+      addressActive = -1;
+      renderAddressSuggest();
+    } catch (error) {
+      if (error.name !== "AbortError") hideAddressSuggest();
+    }
+  }, 400);
+});
+
+addressInput.addEventListener("keydown", event => {
+  if (addressBox.hidden || !addressItems.length) return;
+
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    const step = event.key === "ArrowDown" ? 1 : -1;
+    addressActive =
+      (addressActive + step + addressItems.length) % addressItems.length;
+    renderAddressSuggest();
+  } else if (event.key === "Enter" && addressActive >= 0) {
+    event.preventDefault();
+    chooseAddress(addressActive);
+  } else if (event.key === "Escape") {
+    event.preventDefault();
+    hideAddressSuggest();
+  }
+});
+
+addressBox.addEventListener("mousedown", event => event.preventDefault());
+addressBox.addEventListener("pointerdown", event => event.preventDefault());
+
+addressBox.addEventListener("click", event => {
+  event.preventDefault();
+  const option = event.target.closest("[data-address-index]");
+  if (option) chooseAddress(Number(option.dataset.addressIndex));
+});
+
+addressInput.addEventListener("blur", () => {
+  setTimeout(hideAddressSuggest, 150);
 });
 
 /* Запуск магазина */

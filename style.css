@@ -99,7 +99,6 @@ a { color: inherit; text-decoration: none; }
 .top-nav a { transition: color .2s; }
 .top-nav a:hover { color: #8a6a36; }
 
-/* место в шапке под корзину (сама корзина закреплена на экране) */
 .cart-spacer { width: 118px; flex-shrink: 0; }
 
 .cart-trigger {
@@ -137,8 +136,6 @@ a { color: inherit; text-decoration: none; }
   height: 24px;
   font-size: 13px;
 }
-
-/* Первый экран */
 
 .hero {
   max-width: 1240px;
@@ -264,8 +261,6 @@ a { color: inherit; text-decoration: none; }
   color: #596858;
   margin-top: 4px;
 }
-
-/* Иллюстрация на первом экране */
 
 .hero-art {
   position: relative;
@@ -405,8 +400,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 .art-sticker span { color: #b99a60; font-size: 20px; }
-
-/* Каталог */
 
 .catalog-section {
   max-width: 1180px;
@@ -576,8 +569,6 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 6px 16px #173f2b1a;
 }
 
-/* Карточки с реальными фотографиями */
-
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -622,7 +613,6 @@ a { color: inherit; text-decoration: none; }
   display: none;
 }
 
-/* Фото занимает ровно рамку внутри блока и не может её раздвинуть */
 .product-photo {
   display: block;
   position: absolute;
@@ -746,8 +736,6 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px;
 }
 
-/* О магазине и подвал */
-
 .about-strip {
   max-width: 1180px;
   margin: 0 auto 90px;
@@ -788,8 +776,6 @@ footer {
 
 .footer-brand .brand-mark { width: 35px; height: 35px; font-size: 18px; }
 .footer-brand strong { font-size: 17px; }
-
-/* Затемнение фона, корзина и модальные окна */
 
 .overlay {
   position: fixed;
@@ -1166,8 +1152,6 @@ footer {
   margin: 13px 0 0;
 }
 
-/* Форма оформления заказа */
-
 .checkout-modal {
   width: min(520px, 100%);
   padding: 35px;
@@ -1211,6 +1195,79 @@ footer {
 .checkout-modal textarea:focus {
   border-color: #66865e;
   box-shadow: 0 0 0 3px #e6eee1;
+}
+
+.address-field { position: relative; z-index: 1; }
+
+.address-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 2px);
+  z-index: 20;
+  padding: 5px;
+  background: #fffef9;
+  border: 1px solid #dbe5d6;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px #203e252b;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.address-option {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  text-align: left;
+  padding: 10px 11px;
+  border-radius: 10px;
+  color: #405543;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.address-option:hover,
+.address-option.active { background: #e9f0e4; color: #244c31; }
+
+.address-pin { color: #66835e; font-size: 16px; line-height: 1.2; }
+.address-text { flex: 1; min-width: 0; }
+
+.address-type {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5c7d53;
+  background: #e4eddf;
+  border-radius: 20px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.soon-card { cursor: default; opacity: .92; }
+
+.soon-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #e0e7dc;
+}
+
+.soon-visual {
+  background: repeating-linear-gradient(135deg, #eef3e9 0 14px, #e6eee0 14px 28px);
+  display: grid;
+  place-items: center;
+}
+
+.soon-mark { font-size: 54px; color: #9db393; }
+
+.soon-price {
+  font-size: 18px;
+  color: #6f8268;
+  font-style: italic;
 }
 
 .pay-group { margin-bottom: 15px; }
@@ -1342,8 +1399,6 @@ footer {
   70% { transform: scale(1.12); }
 }
 
-/* Анимация появления при прокрутке (работает вниз и вверх) */
-
 .reveal {
   opacity: 0;
   transform: translateY(34px) scale(.98);
@@ -1362,8 +1417,6 @@ footer {
 
 .hero-art { will-change: transform; }
 
-/* Планшеты */
-
 @media (max-width: 1050px) {
   .hero { margin: 10px 18px 0; padding: 45px 34px; }
   .hero-notes { gap: 17px; }
@@ -1373,8 +1426,6 @@ footer {
   .art-sticker { left: 0; }
   .top-nav { gap: 15px; font-size: 13px; }
 }
-
-/* Телефоны */
 
 @media (max-width: 760px) {
   .site-header {
@@ -1504,6 +1555,8 @@ footer {
   .cart-drawer { padding: 20px; }
   .cart-row { grid-template-columns: 50px minmax(0, 1fr) auto; gap: 9px; }
   .cart-thumb { width: 50px; height: 58px; }
+
+  .address-suggest { max-height: 200px; }
 }
 
 @media (max-width: 390px) {
